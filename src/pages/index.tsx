@@ -1,7 +1,10 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import { initializeApollo } from 'graphql/apolloClient';
+import { FeaturedQuery } from 'graphql/generated/graphql';
+import { FEATURED_QUERY } from 'graphql/queries/book';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import Image from 'next/image';
+import styles from '../styles/Home.module.css';
 
 const Home: NextPage = () => {
   return (
@@ -66,7 +69,21 @@ const Home: NextPage = () => {
         </a>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
+
+export const getStaticProps = async () => {
+  const apolloClient = initializeApollo();
+
+  const { data } = await apolloClient.query<FeaturedQuery>({
+    query: FEATURED_QUERY
+  });
+
+  console.log(JSON.stringify(data));
+
+  return {
+    props: {}
+  };
+};
